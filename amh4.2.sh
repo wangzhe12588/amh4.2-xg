@@ -25,7 +25,7 @@ StartDate='';
 StartDateSecond='';
 PHPDisable='';
 
-GetUrl='http://amh.2014520.cn';
+GetUrl='https://raw.githubusercontent.com/jae-jae/amh4.2-xg/master';
 
 # Version
 AMSVersion='ams-1.5.0107-02';
