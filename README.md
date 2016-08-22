@@ -7,9 +7,9 @@
 ```shell
 screen -S amh
 
-wget https://raw.githubusercontent.com/jae-jae/amh4.2-xg/master/amh4.2.sh
+wget https://raw.githubusercontent.com/jae-jae/amh4.2-xg/master/amh4.2.sh && bash amh4.2.sh 2>&1 | tee amh.log
 
-bash amh4.2.sh 2>&1 | tee amh.log
+
 ```
 
 ## 面板特点
