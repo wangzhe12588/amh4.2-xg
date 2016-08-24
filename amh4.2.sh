@@ -317,6 +317,8 @@ function InstallLibiconv()
 
 	if [ ! -d /usr/local/libiconv ]; then
 		cd $AMHDir/packages/untar/$LibiconvVersion;
+		sed -i 's@_GL_WARN_ON_USE (gets@//_GL_WARN_ON_USE (gets@' ./srclib/stdio.in.h;
+        	sed -i 's@gets is a security@@' ./srclib/stdio.in.h;
 		./configure --prefix=/usr/local/libiconv;
 		make;
 		make install;
