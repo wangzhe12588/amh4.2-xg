@@ -413,55 +413,81 @@ function InstallMysql56()
 {
 if [ "$confirm"  == '2' ]; then
 	# [dir] /usr/local/mysql/
-	echo "[${Mysql56Version} Installing] ************************************************** >>";
-	Downloadfile "${Mysql56Version}.tar.gz" "${GetUrl}/${Mysql56Version}.tar.gz";
-	rm -rf $AMHDir/packages/untar/$Mysql56Version;
-	echo "tar -zxf ${Mysql56Version}.tar.gz ing...";
-	tar -zxf $AMHDir/packages/$Mysql56Version.tar.gz -C $AMHDir/packages/untar;
+    echo "[${Mysql56Version} Installing] ************************************************** >>";
+    if [ ! -f /usr/local/mysql/bin/mysql ]; then
+        Downloadfile "${Mysql56Version}.tar.gz" "${GetUrl}/${Mysql56Version}.tar.gz";
+        rm -rf $AMHDir/packages/untar/$Mysql56Version;
+        echo "tar -zxf ${Mysql56Version}.tar.gz ing...";
+        tar -zxf $AMHDir/packages/$Mysql56Version.tar.gz -C $AMHDir/packages/untar;
 
-	if [ ! -f /usr/local/mysql/bin/mysql ]; then
-		cd $AMHDir/packages/untar/$Mysql56Version;
-		
-		 cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql  -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci -DWITH_EXTRA_CHARSETS=complex -DWITH_READLINE=1 -DENABLED_LOCAL_INFILE=1;
-		
-		
-		make -j $Cpunum;
-		make install;
-		chmod +w /usr/local/mysql;
-		chown -R mysql:mysql /usr/local/mysql;
-		mkdir -p /home/mysqldata;
-		chown -R mysql:mysql /home/mysqldata;
+        cd $AMHDir/packages/untar/$Mysql56Version;
+        cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DMYSQL_DATADIR=/home/mysql_data -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_MEMORY_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DWITH_BLACKHOLE_STORAGE_ENGINE=1 -DWITH_READLINE=1 -DENABLED_LOCAL_INFILE=1 -DENABLE_DTRACE=0 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci -DWITH_EXTRA_CHARSETS=complex;
+        make -j $Cpunum;
+        make install;   
 
-		rm -f /etc/mysql/my.cnf /usr/local/mysql/etc/my.cnf;
-		cp $AMHDir/conf/my56.cnf /etc/my.cnf;
-		cp $AMHDir/conf/mysql /root/amh/mysql;
-		chmod +x /root/amh/mysql;
-		/usr/local/mysql/scripts/mysql_install_db --user=mysql --defaults-file=/etc/my.cnf --basedir=/usr/local/mysql --datadir=/home/mysqldata;
-		
+        groupadd mysql;
+        useradd mysql -g mysql -M -s /sbin/nologin;
+        chmod +w /usr/local/mysql;
+        chown -R mysql:mysql /usr/local/mysql;
+        mkdir -p /home/mysql_data;
+        chown -R mysql:mysql /home/mysql_data;
+
+        rm -f /etc/mysql/my.cnf /usr/local/mysql/etc/my.cnf;
+        cp $AMHDir/conf/my56.cnf /etc/my.cnf;
+        cp $AMHDir/conf/mysql /root/amh/mysql;
+        chmod +x /root/amh/mysql;
+
+        if [ $RamTotal -gt 1500 -a $RamTotal -le 2500 ];then
+                sed -i 's@^thread_cache_size.*@thread_cache_size = 16@' /etc/my.cnf;
+                sed -i 's@^query_cache_size.*@query_cache_size = 16M@' /etc/my.cnf;
+                sed -i 's@^myisam_sort_buffer_size.*@myisam_sort_buffer_size = 16M@' /etc/my.cnf;
+                sed -i 's@^key_buffer_size.*@key_buffer_size = 16M@' /etc/my.cnf;
+                sed -i 's@^innodb_buffer_pool_size.*@innodb_buffer_pool_size = 128M@' /etc/my.cnf;
+                sed -i 's@^tmp_table_size.*@tmp_table_size = 32M@' /etc/my.cnf;
+                sed -i 's@^table_open_cache.*@table_open_cache = 256@' /etc/my.cnf;
+        elif [ $RamTotal -gt 2500 -a $RamTotal -le 3500 ];then
+                sed -i 's@^thread_cache_size.*@thread_cache_size = 32@' /etc/my.cnf;
+                sed -i 's@^query_cache_size.*@query_cache_size = 32M@' /etc/my.cnf;
+                sed -i 's@^myisam_sort_buffer_size.*@myisam_sort_buffer_size = 32M@' /etc/my.cnf;
+                sed -i 's@^key_buffer_size.*@key_buffer_size = 64M@' /etc/my.cnf;
+                sed -i 's@^innodb_buffer_pool_size.*@innodb_buffer_pool_size = 512M@' /etc/my.cnf;
+                sed -i 's@^tmp_table_size.*@tmp_table_size = 64M@' /etc/my.cnf;
+                sed -i 's@^table_open_cache.*@table_open_cache = 512@' /etc/my.cnf;
+        elif [ $RamTotal -gt 3500 ];then
+                sed -i 's@^thread_cache_size.*@thread_cache_size = 64@' /etc/my.cnf;
+                sed -i 's@^query_cache_size.*@query_cache_size = 64M@' /etc/my.cnf;
+                sed -i 's@^myisam_sort_buffer_size.*@myisam_sort_buffer_size = 64M@' /etc/my.cnf;
+                sed -i 's@^key_buffer_size.*@key_buffer_size = 256M@' /etc/my.cnf;
+                sed -i 's@^innodb_buffer_pool_size.*@innodb_buffer_pool_size = 1024M@' /etc/my.cnf;
+                sed -i 's@^tmp_table_size.*@tmp_table_size = 128M@' /etc/my.cnf;
+                sed -i 's@^table_open_cache.*@table_open_cache = 1024@' /etc/my.cnf;
+        fi;
+        sed -i 's@executing mysqld_safe@executing mysqld_safe\nexport LD_PRELOAD=/usr/local/gperftools/lib/libtcmalloc.so@' /usr/local/mysql/bin/mysqld_safe
+        /usr/local/mysql/scripts/mysql_install_db --user=mysql --defaults-file=/etc/my.cnf --basedir=/usr/local/mysql --datadir=/home/mysql_data;
+        
 
 # EOF **********************************
 cat > /etc/ld.so.conf.d/mysql.conf<<EOF
 /usr/local/mysql/lib/mysql
-/usr/local/lib
 EOF
 # **************************************
 
-		ldconfig;
-		if [ "$SysBit" == '64' ] ; then
-			ln -s /usr/local/mysql/lib/mysql /usr/lib64/mysql;
-		else
-			ln -s /usr/local/mysql/lib/mysql /usr/lib/mysql;
-		fi;
-		chmod 775 /usr/local/mysql/support-files/mysql.server;
-		/usr/local/mysql/support-files/mysql.server start;
-		ln -s /usr/local/mysql/bin/mysql /usr/bin/mysql;
-		ln -s /usr/local/mysql/bin/mysqladmin /usr/bin/mysqladmin;
-		ln -s /usr/local/mysql/bin/mysqldump /usr/bin/mysqldump;
-		ln -s /usr/local/mysql/bin/myisamchk /usr/bin/myisamchk;
-		ln -s /usr/local/mysql/bin/mysqld_safe /usr/bin/mysqld_safe;
+        ldconfig -v;
+        if [ "$SysBit" == '64' ] ; then
+            ln -sf /usr/local/mysql/lib/mysql /usr/lib64/mysql;
+        else
+            ln -sf /usr/local/mysql/lib/mysql /usr/lib/mysql;
+        fi;
+        chmod 775 /usr/local/mysql/support-files/mysql.server;
+        /usr/local/mysql/support-files/mysql.server start;
+        ln -sf /usr/local/mysql/bin/mysql /usr/bin/mysql;
+        ln -sf /usr/local/mysql/bin/mysqladmin /usr/bin/mysqladmin;
+        ln -sf /usr/local/mysql/bin/mysqldump /usr/bin/mysqldump;
+        ln -sf /usr/local/mysql/bin/myisamchk /usr/bin/myisamchk;
+        ln -sf /usr/local/mysql/bin/mysqld_safe /usr/bin/mysqld_safe;
 
-		/usr/local/mysql/bin/mysqladmin password $MysqlPass;
-		rm -rf /usr/local/mysql/data/test;
+        /usr/local/mysql/bin/mysqladmin password $MysqlPass;
+        rm -rf /home/mysql_data/test;
 
 # EOF **********************************
 mysql -hlocalhost -uroot -p$MysqlPass <<EOF
@@ -472,10 +498,10 @@ DROP USER ''@'%';
 FLUSH PRIVILEGES;
 EOF
 # **************************************
-		echo "[OK] ${Mysql56Version} install completed.";
-	else
-		echo '[OK] MySQL is installed.';
-	fi;
+        echo "[OK] ${Mysql56Version} install completed.";
+    else
+        echo '[OK] MySQL is installed.';
+    fi;
  else
  InstallMysql57;
  fi;
