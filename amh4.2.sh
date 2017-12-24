@@ -41,7 +41,7 @@ Php53Version='php-5.3.29';
 Php54Version='php-5.4.45';
 Php55Version='php-5.5.33';
 Php56Version='php-5.6.19';
-Php70Version='php-7.0.4';
+Php70Version='php-7.1.12';
 NginxVersion='nginx-1.9.12b'; #伪装服务器名称版本
 OpenSSLVersion='openssl-1.0.2e';
 NginxCachePurgeVersion='ngx_cache_purge-2.3';
@@ -119,8 +119,8 @@ function ConfirmInstall()
 	[ "$confirm54" == 'y' ] && echo '[OK] php5.4 will be installed';
 	read -p '[Notice] Do you want PHP5.5? : (y/n)' confirm55;
 	[ "$confirm55" == 'y' ] && echo '[OK] php5.5 will be installed';
-	read -p '[Notice] Do you want PHP7.0? : (y/n)' confirm70;
-	[ "$confirm70" == 'y' ] && echo '[OK] php7.0 will be installed';
+	read -p '[Notice] Do you want PHP7.1? : (y/n)' confirm70;
+	[ "$confirm70" == 'y' ] && echo '[OK] php7.1 will be installed';
 	
 }
 
@@ -878,7 +878,7 @@ function InstallPhp70()
 
 		echo "[OK] ${Php70Version} install completed.";
 	else
-		echo '[OK] PHP7.0 is installed.';
+		echo '[OK] PHP7.1 is installed.';
 	fi;
 }
 
