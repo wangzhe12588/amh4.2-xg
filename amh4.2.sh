@@ -93,7 +93,7 @@ function ConfirmInstall()
 	fi;
 
 	echo "[Notice] Confirm Install Mysql / Mariadb? please select: (1~6)"
-	select DBselect in 'Mysql-5.5.47' 'Mysql-5.6.27' 'Mysql-5.7.10' 'Mariadb-5.5.47' 'Mariadb-10.1.11' 'Exit'; do break; done;
+	select DBselect in 'Mysql-5.5.47' 'Mysql-5.6.27' 'Mysql-5.7' 'Mariadb-5.5.47' 'Mariadb-10.1.11' 'Exit'; do break; done;
 	[ "$DBselect" == 'Exit' ] && echo 'Exit Install.' && exit;
 		
 	if [ "$DBselect" == 'Mysql-5.5' ]; then
