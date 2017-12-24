@@ -19,7 +19,7 @@ bash amh4.2.sh 2>&1 | tee amh.log
 
 2.支持nginx和tengine选择，而且都开启http2
 
-3.多版本php共存, php5.3,php5.4,php5.5以及php5.6和php7.0
+3.多版本php共存, php5.3,php5.4,php5.5以及php5.6和php7.1
 
 4.面板默认使用php5.6
 
