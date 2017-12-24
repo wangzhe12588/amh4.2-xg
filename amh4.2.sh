@@ -96,12 +96,12 @@ function ConfirmInstall()
 	select DBselect in 'Mysql-5.5.47' 'Mysql-5.6.27' 'Mysql-5.7.10' 'Mariadb-5.5.47' 'Mariadb-10.1.11' 'Exit'; do break; done;
 	[ "$DBselect" == 'Exit' ] && echo 'Exit Install.' && exit;
 		
-	if [ "$DBselect" == 'Mysql-5.5.47' ]; then
-	confirm='1' && echo '[OK] Mysql-5.5.47 installed';
+	if [ "$DBselect" == 'Mysql-5.5' ]; then
+	confirm='1' && echo '[OK] Mysql-5.5 installed';
 	elif [ "$DBselect" == 'Mysql-5.6.27' ]; then
 	confirm='2' && echo '[OK] Mysql-5.6.27 installed';
-	elif [ "$DBselect" == 'Mysql-5.7.10' ]; then
-	confirm='3' && echo '[OK] Mysql-5.7.10 installed';
+	elif [ "$DBselect" == 'Mysql-5.7' ]; then
+	confirm='3' && echo '[OK] Mysql-5.7 installed';
 	elif [ "$DBselect" == 'Mariadb-5.5.47' ]; then
 	confirm='4' && echo '[OK] Mariadb-5.5.47 installed';
 	elif [ "$DBselect" == 'Mariadb-10.1.11' ]; then
