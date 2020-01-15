@@ -254,7 +254,7 @@ function InstallReady()
 	useradd -s /sbin/nologin -g mysql mysql;
     
 	cd $AMHDir/packages;
-	wget ${GetUrl}/${ConfVersion}.zip;
+	wget --no-check-certificate ${GetUrl}/${ConfVersion}.zip;
 	unzip ${ConfVersion}.zip -d $AMHDir/conf;
 }
 
