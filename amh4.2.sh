@@ -229,7 +229,7 @@ function Downloadfile()
 		echo "[OK] $1 found.";
 	else
 		echo "[Notice] $1 not found, download now......";
-		if ! wget -c --tries=3 ${2}?${randstr} ; then
+		if ! wget  --no-check-certificate -c --tries=3 ${2}?${randstr} ; then
 			echo "[Error] Download Failed : $1, please check $2 ";
 			exit;
 		else
