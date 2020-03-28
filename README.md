@@ -12,6 +12,15 @@ wget https://raw.githubusercontent.com/wangzhe12588/amh4.2-xg/master/amh4.2.sh
 bash amh4.2.sh 2>&1 | tee amh.log
 
 ```
+#安装反代模块
+
+wget https://raw.githubusercontent.com/wangzhe12588/amh4.2-xg/master/AMProxy-2.0.module.tar.gz
+tar xf AMProxy-2.0.module.tar.gz
+mv AMProxy-2.0 amh/modules/AMProxy-2.0
+可登录后台安装
+也可以在终端
+amh module [模块名] install
+
 
 ## 面板特点
 
