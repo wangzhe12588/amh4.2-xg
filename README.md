@@ -13,7 +13,7 @@ bash amh4.2.sh 2>&1 | tee amh.log
 
 ```
 #安装反代模块
-
+```shell
 wget https://raw.githubusercontent.com/wangzhe12588/amh4.2-xg/master/AMProxy-2.0.module.tar.gz
 
 tar xf AMProxy-2.0.module.tar.gz
@@ -27,6 +27,7 @@ mv AMProxy-2.0 amh/modules/AMProxy-2.0
 amh module [模块名] install
 
 
+```
 ## 面板特点
 
 1.支持多数据库选择,mysql5.5,mysql5.6,mysql5.7以及mariadb10.1，mariadb5.5
